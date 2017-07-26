@@ -37,7 +37,3 @@ end
 figure
 surf(storeIters,'EdgeColor','None')
 view(2)
-
-
-
-
