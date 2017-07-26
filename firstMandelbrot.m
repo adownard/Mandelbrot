@@ -1,39 +1,42 @@
 %%%%%%%%%%% Mandelbrot Set %%%%%%%%%%%%
 clear all 
-% side note: 1080x1920
+
+% Input parameters
+resolution=[1920 1080];
+center=0;
+width=4;
+
+max_depth=10;                   % max number of iterations
 
 %%%%%%% generate grid %%%%%%%%
+left=real(center)-width/2;
+right=real(center)+width/2;
 
-dx = .01;                   % set grid boundaries and increments
-dy = .01; 
-x0 = -2.5; 
-xf = 2;
-ylen = 1080*(xf-x0)/1920;
-y0 = -ylen*0.5; 
-yf = ylen*0.5; 
-nx = floor((xf - x0)/dx);
-ny = floor((yf - y0)/dy);    
-cVec = [nx ny];            % allocate cVec for complex number values
+height=width*resolution(2)/resolution(1);
+top=imag(center)+height/2;
+bottom=imag(center)-height/2;
 
-for iy=1:ny
-    for ix=1:nx
-        cVec(ix,iy) = complex((x0+ix*dx),-(y0+iy*dy)); 
-    end
-end
+[X,Y]=meshgrid(left:width/(resolution(1)-1):right,top:-height/(resolution(2)-1):bottom); 
+C = X + i*Y;
 
-c = transpose(cVec);       % arrange values in grid/axis positions
-z0 = zeros(ny,nx);                    % initial z matrix is complex value matrix
-storeIters = zeros(ny,nx);   
+z=zeros(size(C));                    % initial z matrix is complex value matrix
+depth=zeros(size(C)); 
 %%%%%%% apply formula to matrices %%%%%%%%%
 
-nz = 10;                   % number of iterations
-for iz=1:nz
-    zn = z0.^2 + c;                   % apply iteration of mandelbrot sequence
-    manVals = abs(zn) < 2;            % boolean matrix containing true values if the magnitude of zn value is less than 2
-    iter = abs(zn) > 2;               % if true, the point has diverged
-    storeIters = iter + storeIters;   % stores number of iterations each point goes through; 0 is included in mandelbrot 
-    z0 = zn;                          % reset z0 to new value 
-end
+for iter=1:max_depth
+    z=z.^2+C;                   % apply iteration of mandelbrot sequence
+    escaped = abs(z) > 2;               % if true, the point has diverged
+    depth(escaped) = iter;   % stores number of iterations each point goes through; 0 is included in mandelbrot 
+end 
 figure
+<<<<<<< HEAD:firstMandelbrot.m
 surf(storeIters,'EdgeColor','None')
 view(2)
+=======
+surf(depth,'EdgeColor','None')
+view(2)
+
+
+
+
+>>>>>>> 75a80a6505b6659e4a122c6f3c150ea6b891881a:mandelbrot.asv

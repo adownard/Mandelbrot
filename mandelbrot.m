@@ -2,8 +2,12 @@
 clear all 
 
 % Input parameters
+<<<<<<< HEAD
 %resolution=[1920 1080];
 resolution=[1920 1080]; 
+=======
+resolution=[1920 1080];
+>>>>>>> 75a80a6505b6659e4a122c6f3c150ea6b891881a
 center=0;
 width=4;
 
@@ -26,9 +30,14 @@ depth=zeros(size(C));
 
 for iter=1:max_depth
     z=z.^2+C;                   % apply iteration of mandelbrot sequence
+<<<<<<< HEAD
     escaped = abs(z) > 2;       % if true, the point has diverged
     index=find(escaped==1);
     depth(index) = iter;        % stores number of iterations each point goes through; 0 is included in mandelbrot 
+=======
+    escaped = abs(z) > 2;               % if true, the point has diverged
+    depth(escaped) = iter;   % stores number of iterations each point goes through; 0 is included in mandelbrot 
+>>>>>>> 75a80a6505b6659e4a122c6f3c150ea6b891881a
 end 
 figure
 surf(depth,'EdgeColor','None')
