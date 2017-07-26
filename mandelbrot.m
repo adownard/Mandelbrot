@@ -19,7 +19,7 @@ bottom=imag(center)-height/2;
 [X,Y]=meshgrid(left:width/(resolution(1)-1):right,top:-height/(resolution(2)-1):bottom); 
 C=X+1i*Y;
 
-% initiate depth, index, location and value arrays:
+% initiate arrays:
 D=zeros(size(C));   % depth array
 c=C(:)';            % (flattened) location array
 z=zeros(size(c));   % (flattened) value array
@@ -41,7 +41,3 @@ end
 figure; imagesc(D); axis image; axis off; colormap hot
 
 toc
-
-
-
-
