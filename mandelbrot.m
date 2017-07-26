@@ -1,4 +1,4 @@
-% Mandelbrot set explorer
+j% Mandelbrot set explorer
 clear variables
 tic
 
@@ -14,30 +14,36 @@ left=real(center)-width/2;
 right=real(center)+width/2;
 top=imag(center)+height/2;
 bottom=imag(center)-height/2;
-
+nZooms=2; 
+zoomFrac=.9;
 % generate complex grid coordinates:
 [X,Y]=meshgrid(left:width/(resolution(1)-1):right,top:-height/(resolution(2)-1):bottom); 
 C=X+1i*Y;
+imageStack=zeros(resolution(2),resolution(1)); 
+for iz=0:nZooms
+    C=C*(zoomFrac)^(iz);
 
-% initiate arrays:
-D=zeros(size(C));   % depth array
-c=C(:)';            % (flattened) location array
-z=zeros(size(c));   % (flattened) value array
-I=1:numel(z);       % (flattened) index array   
+    % initiate arrays:
+    D=zeros(size(C));   % depth array
+    c=C(:)';            % (flattened) location array
+    z=zeros(size(c));   % (flattened) value array
+    I=1:numel(z);       % (flattened) index array   
 
-% evolve values:
-for iter=1:max_depth    
-    z=z.^2+c;           % iterate function
-    I_esc=abs(z)>2;     % logically index escaped values  
-    D(I(I_esc))=iter;   % set depth of escaped values
-    % remove escaped elements:
-    I(I_esc)=[];
-    z(I_esc)=[];
-    c(I_esc)=[];
-    fprintf('Depth: %d, surviving points: %d\n',[iter,numel(I)])
+    % evolve values:
+    for iter=1:max_depth    
+        z=z.^2+c;           % iterate function
+        I_esc=abs(z)>2;     % logically index escaped values  
+        D(I(I_esc))=iter;   % set depth of escaped values
+        % remove escaped elements:
+        I(I_esc)=[];
+        z(I_esc)=[];
+        c(I_esc)=[];
+        fprintf('Depth: %d, surviving points: %d\n',[iter,numel(I)])
+    end
+    imageStack(:,:,iz+1)=D; 
+    % plot Mandelbrot set:
+    %figure; imagesc(D); axis image; axis off; colormap hot
 end
-
-% plot Mandelbrot set:
-figure; imagesc(D); axis image; axis off; colormap hot
-
+x=permute(imageStack,[1,2,4,3]); 
+immovie(x,colormap(hot))
 toc
