@@ -1,70 +1,44 @@
 % Mandelbrot set explorer
+set(0,'DefaultFigureWindowStyle','normal');
+set(0,'DefaultFigureMenu','none');
 clear variables
-tic
 
-% input parameters:
-resolution=[1920 1080]; % in pixels
-center=-1.7400623825+0.0281753397i;               % physical location of frame center
-max_depth=100;          % max # of iterations
-width=10;                % initial frame width in physical units
-n_zooms=500; 
-zoom_frac=.99;
-%imageStack=zeros(resolution(2),resolution(1));
-imageStack=zeros([resolution(2) resolution(1) 1 n_zooms]);
+% overall parameters:
+resolution=[800 600]; % in pixels
+center=-0.1002+0.8383i;               % physical location of frame center
+max_depth=80;                          % max # of iterations
+initial_width=10;                % initial frame width on complex plane
+mode=1; %1: explore, 2: zoom
 
-
-% 
-% %writerObj = VideoWriter('grid-cell-animation-zero-T','MPEG-4');
-% movie.FrameRate=30;
-% open(movie);
- 
-for zoom_iter=1:n_zooms
-    zoom_iter
-    % get frame boundaries:    
-    height=width*resolution(2)/resolution(1);
-    left=real(center)-width/2;
-    right=real(center)+width/2;
-    top=imag(center)+height/2;
-    bottom=imag(center)-height/2;
-
-    % generate complex grid within frame:
-    [X,Y]=meshgrid(left:(right-left)/(resolution(1)-1):right,top:-(top-bottom)/(resolution(2)-1):bottom); 
-    C=X+1i*Y;
-
-    % initiate arrays:
-    D=zeros(size(C));   % depth array
-    c=C(:)';            % (flattened) location array
-    z=zeros(size(c));   % (flattened) value array
-    I=1:numel(z);       % (flattened) index array   
-
-    % evolve values:
-    for iter=1:max_depth    
-        z=z.^2+c;           % iterate function
-        I_esc=abs(z)>2;     % logically index escaped values  
-        D(I(I_esc))=iter;   % set depth of escaped values
-        % remove escaped elements:
-        I(I_esc)=[];
-        z(I_esc)=[];
-        c(I_esc)=[];
-        %fprintf('Depth: %d, surviving points: %d\n',[iter,numel(I)])
+if mode==1
+    % explore parameters:
+    magnifier_frac=.4;   % fraction of current frame occupied by magnifying rectangle around cursor  
+    
+    global width;
+    width=initial_width;
+    
+    figure 
+    colormap([0 0 0; colormap(hot(max_depth-1))])
+    set(gca,'LooseInset',get(gca,'TightInset'))    
+    show_frame(center,width,resolution,magnifier_frac,max_depth)  
+    
+elseif mode==2
+    
+    % zoom parameters:
+    zoom_frac=.99; 
+    n_zooms=10;
+    
+    frames=zeros([resolution(2) resolution(1) 1 n_zooms]);
+    for zoom_iter=1:n_zooms
+        width=zoom_frac^(zoom_iter-1)*initial_width;    % zoom the frame-width
+        disp(zoom_iter)    
+        frame=generate_frame(center,width,resolution,max_depth);
+        frames(:,:,1,zoom_iter)=frame;     
     end
-    imageStack(:,:,1,zoom_iter)=D; 
-    % plot Mandelbrot set:
-    %set(gcf, 'visible', 'off');
-%     imagesc(D); axis image; axis off; colormap hot;
-%     frame = getframe(gcf);
-%     close(gcf);
-%     writeVideo(movie,frame);
-%     drawnow
-         
-    width=zoom_frac*width;                % zoom width
+    movie_name='movie'; 
+    movie=VideoWriter(movie_name,'Uncompressed AVI');
+    open(movie);
+    img=immovie(frames,[0 0 0; colormap(hot(max_depth-1))]);
+    writeVideo(movie,img);
+    close(movie);
 end
-
-movieName='movie'; 
-movie=VideoWriter(movieName,'Motion JPEG AVI');
-open(movie); 
-imageStack=imageStack+1; 
-img=immovie(imageStack,colormap(hot(max_depth+1)));
-writeVideo(movie,img);
-close(movie);
-toc
