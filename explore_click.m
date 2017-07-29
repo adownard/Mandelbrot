@@ -1,9 +1,7 @@
-function explore_click(magnifier_frac,center,resolution,depth_levels,log_colour)
-    global width;    
+function explore_click(magnifier_frac,depth_levels,max_depth,log_colour)
+    global center width 
     coords=get(gca,'CurrentPoint');    
-    % convert pixel coords to complex plane coords:
-    coords=[coords(1,1)-resolution(1)/2, resolution(2)/2-coords(1,2)]*width/resolution(1);
-    new_center=center+coords(1,1)+coords(1,2)*1i;
+    center=convert_pixel_to_complex_coords(coords);
     width=magnifier_frac*width;
-    show_frame(new_center,width,resolution,magnifier_frac,depth_levels,log_colour)
+    show_frame(magnifier_frac,depth_levels,max_depth,log_colour)
 end
