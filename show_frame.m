@@ -1,5 +1,5 @@
-function show_frame(center,width,resolution,magnifier_frac,max_depth)
-    frame=generate_frame(center,width,resolution,max_depth);       
+function show_frame(center,width,resolution,magnifier_frac,depth_levels,log_colour)
+    frame=generate_frame(center,width,resolution,depth_levels,log_colour);       
     imagesc(frame);
     axis image; axis off;
     axis([0 resolution(1) 0 resolution(2)])
@@ -9,4 +9,4 @@ function show_frame(center,width,resolution,magnifier_frac,max_depth)
     rect=imrect(gca, [0,0,0,0]);
     show_magnifier(magnifier_width,magnifier_height)
     set(gcf, 'WindowButtonMotionFcn', @(obj,event) show_magnifier(magnifier_width,magnifier_height));
-    set(gcf, 'WindowButtonDownFcn', @(obj,event) explore_click(magnifier_frac,center,resolution,max_depth));
+    set(gcf, 'WindowButtonDownFcn', @(obj,event) explore_click(magnifier_frac,center,resolution,depth_levels,log_colour));

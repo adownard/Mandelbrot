@@ -5,22 +5,23 @@ clear variables
 
 % overall parameters:
 resolution=[800 600]; % in pixels
-center=-0.1002+0.8383i;               % physical location of frame center
-max_depth=80;                          % max # of iterations
+center=0;               % physical location of frame center
+depth_levels=200;                          % max # of iterations
+log_colour=1; % logarithmic colour map
 initial_width=10;                % initial frame width on complex plane
 mode=1; %1: explore, 2: zoom
 
 if mode==1
     % explore parameters:
-    magnifier_frac=.4;   % fraction of current frame occupied by magnifying rectangle around cursor  
+    magnifier_frac=.2;   % window fraction of frame occupied by magnifying rectangle
     
     global width;
     width=initial_width;
     
     figure 
-    colormap([0 0 0; colormap(hot(max_depth-1))])
+    colormap([0 0 0; colormap(hot(depth_levels-1))])
     set(gca,'LooseInset',get(gca,'TightInset'))    
-    show_frame(center,width,resolution,magnifier_frac,max_depth)  
+    show_frame(center,width,resolution,magnifier_frac,depth_levels,log_colour)  
     
 elseif mode==2
     
@@ -32,13 +33,13 @@ elseif mode==2
     for zoom_iter=1:n_zooms
         width=zoom_frac^(zoom_iter-1)*initial_width;    % zoom the frame-width
         disp(zoom_iter)    
-        frame=generate_frame(center,width,resolution,max_depth);
+        frame=generate_frame(center,width,resolution,depth_levels,log_colour);
         frames(:,:,1,zoom_iter)=frame;     
     end
     movie_name='movie'; 
     movie=VideoWriter(movie_name,'Uncompressed AVI');
     open(movie);
-    img=immovie(frames,[0 0 0; colormap(hot(max_depth-1))]);
+    img=immovie(frames,[0 0 0; colormap(hot(depth_levels-1))]);
     writeVideo(movie,img);
     close(movie);
 end
