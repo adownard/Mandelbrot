@@ -1,7 +1,11 @@
-function show_mag_and_coords(magnifier_width,magnifier_height)
-    global rect
-        
+function show_mag_and_coords()
+    global rect magnifier_size
+    
+    magnifier_width=magnifier_size(1);
+    magnifier_height=magnifier_size(2); 
+    
     coords=get(gca,'CurrentPoint');
+    
     left=coords(1,1)-magnifier_width/2;
     top=coords(1,2)-magnifier_height/2;
 

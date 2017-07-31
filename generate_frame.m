@@ -1,5 +1,6 @@
-function frame=generate_frame(depth_levels,max_depth,log_colour)
-    global center width resolution
+function frame=generate_frame()
+    global center width resolution depth_levels max_depth log_colour
+    
     % get frame boundaries:    
     height=width*resolution(2)/resolution(1);
     left=real(center)-width/2;
@@ -12,14 +13,14 @@ function frame=generate_frame(depth_levels,max_depth,log_colour)
     C=X+1i*Y;
 
     % initiate arrays:
-    D=ones(size(C));    % depth array
+    D=nan(size(C));    % depth array
     c=C(:)';            % (flattened) location array
     z=zeros(size(c));   % (flattened) value array
     I=1:numel(z);       % (flattened) index array   
 
     % evolve values:
-    depth=1;
-    while (depth<max_depth)&&(~numel(min(D(D>1)))||(depth<min(D(D>1))+depth_levels))    
+    depth=0;
+    while (depth<max_depth)&&(isnan(nanmin(D(:)))||(depth<nanmin(D(:))+depth_levels))    
         z=z.^2+c;           % iterate function
         I_esc=abs(z)>2;     % logically index escaped values  
         D(I(I_esc))=depth;   % set depth of escaped values
@@ -34,7 +35,7 @@ function frame=generate_frame(depth_levels,max_depth,log_colour)
     frame=D;
     if log_colour
         % logarithmic colour map        
-        frame=log(D);
+        frame=log(D+1);
         frame=frame*depth_levels/max(frame(:))+1;
     end
     
