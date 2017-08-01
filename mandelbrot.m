@@ -3,7 +3,7 @@ set(0,'DefaultFigureWindowStyle','normal');
 set(0,'DefaultFigureMenu','none');
 clear variables
 
-global center width resolution depth_levels max_depth log_colour mode magnifier_frac magnifier_size
+global center width resolution depth_levels max_depth log_colour mode computation_mode magnifier_frac magnifier_size
 
 % overall parameters:
 resolution=[1920 1080]; % in pixels
@@ -12,18 +12,19 @@ depth_levels=50; % adaptive number of depth levels
 max_depth=200; % max # of iterations
 log_colour=1; % logarithmic colour map
 initial_width=10;                % initial frame width on complex plane
-mode=2; %1: explore, 2: zoom
+mode='explore'; % 'explore' or 'zoom'
+computation_mode='gpu'; % 'cpu' or 'gpu'
 magnifier_frac=.1;   % frame fraction occupied by magnifying rectangle
 
 figure('Position',[0 0 resolution(1) resolution(2)])
 set(gca,'position',[0 0 1 1]);
 
-if mode==1
+if strcmp(mode,'explore')
     magnifier_size=magnifier_frac*resolution;
     width=initial_width;
     show_frame(generate_frame())  
     
-elseif mode==2
+elseif strcmp(mode,'zoom')
     set(gcf, 'visible', 'off');
     % zoom parameters:
     zoom_frac=10^(-15/1800); 

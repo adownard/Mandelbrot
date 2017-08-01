@@ -1,4 +1,4 @@
-function count = pctdemo_processMandelbrotElement(x0,y0,maxIterations)
+function count = pctdemo_processMandelbrotElement(x0,y0,maxIterations,log_colour)
 %PCTDEMO_PROCESSMANDELBROTELEMENT  Evaluate a Mandelbrot Set element
 %   m = pctdemo_processMandelbrotElement(x0,y0,maxIterations) evaluates the
 %   number of steps before the complex value (x0,y0) jumps outside a circle
@@ -10,6 +10,8 @@ function count = pctdemo_processMandelbrotElement(x0,y0,maxIterations)
 
 %   Copyright 2011 The MathWorks, Inc.
 
+%   Modified by Abhranil Das and Alicia Downer, August 2017.
+
 z0 = complex(x0,y0);
 z = z0;
 count = 1;
@@ -17,4 +19,6 @@ while (count <= maxIterations) && (abs(z) <= 2)
     count = count + 1;
     z = z*z + z0;
 end
-count = log(count);
+if log_colour
+    count = log(count);
+end
