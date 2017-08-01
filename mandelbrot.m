@@ -6,17 +6,19 @@ clear variables
 global center width resolution depth_levels max_depth log_colour mode magnifier_frac magnifier_size
 
 % overall parameters:
-resolution=[800 600]; % in pixels
-center=-0.761130+0.088999i;               % physical location of frame center
+resolution=[1920 1080]; % in pixels
+center=-0.840018751752609 + 0.224304941676980i;               % physical location of frame center
 depth_levels=50; % adaptive number of depth levels
 max_depth=200; % max # of iterations
-log_colour=0; % logarithmic colour map
+log_colour=1; % logarithmic colour map
 initial_width=10;                % initial frame width on complex plane
 mode=2; %1: explore, 2: zoom
-magnifier_frac=.2;   % frame fraction occupied by magnifying rectangle
+magnifier_frac=.1;   % frame fraction occupied by magnifying rectangle
 
-figure 
-    
+figure('Position',[0 0 resolution(1) resolution(2)])
+set(gca,'position',[0 0 1 1]);
+set(gcf, 'visible', 'off');
+
 if mode==1
     magnifier_size=magnifier_frac*resolution;
     width=initial_width;
@@ -24,15 +26,17 @@ if mode==1
     
 elseif mode==2    
     % zoom parameters:
-    zoom_frac=.5; 
-    n_zooms=10;
+    zoom_frac=10^(-15/1800); 
+    n_zooms=30;
     
     frames=zeros([resolution(2) resolution(1) 1 n_zooms]);
     %wb_h=waitbar(0,'Creating movie...');
     writerObj = VideoWriter('movie','MPEG-4');
-    writerObj.FrameRate=15;
+    writerObj.FrameRate=30;
     open(writerObj);
-    for zoom_iter=1:n_zooms        
+    tic
+    for zoom_iter=1:n_zooms
+        zoom_iter
         width=zoom_frac^(zoom_iter-1)*initial_width;    % zoom the frame-width           
         show_frame(generate_frame())
         drawnow
@@ -42,6 +46,7 @@ elseif mode==2
         %frames(:,:,1,zoom_iter)=frame;     
     end
     close(writerObj);
+    toc
 %     movie_name='movie'; 
 %     movie=VideoWriter(movie_name,'Uncompressed AVI');
 %     open(movie);

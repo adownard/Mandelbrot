@@ -9,6 +9,10 @@ function frame=generate_frame()
     bottom=imag(center)-height/2;
 
     % generate complex grid within frame:
+%     x = gpuArray.linspace( left, right, gridSize );
+%     y = gpuArray.linspace( ylim(1), ylim(2), gridSize );
+%     [xGrid,yGrid] = meshgrid( x, y );
+%     z0 = complex( xGrid, yGrid );
     [X,Y]=meshgrid(left:(right-left)/(resolution(1)-1):right,top:-(top-bottom)/(resolution(2)-1):bottom); 
     C=X+1i*Y;
 

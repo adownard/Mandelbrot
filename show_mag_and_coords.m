@@ -11,5 +11,5 @@ function show_mag_and_coords()
 
     setPosition(rect,[left,top,magnifier_width,magnifier_height]);
     
-    title(sprintf('%.6f+%.6fi',real(convert_pixel_to_complex_coords(coords)),imag(convert_pixel_to_complex_coords(coords))))
+    title(sprintf('%.15f+%.15fi',real(convert_pixel_to_complex_coords(coords)),imag(convert_pixel_to_complex_coords(coords))))
 end
