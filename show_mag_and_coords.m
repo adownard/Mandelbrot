@@ -1,6 +1,5 @@
 function show_mag_and_coords()
     global rect magnifier_size
-    
     magnifier_width=magnifier_size(1);
     magnifier_height=magnifier_size(2); 
     

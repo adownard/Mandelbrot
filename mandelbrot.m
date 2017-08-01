@@ -13,7 +13,7 @@ max_depth=200; % max # of iterations
 log_colour=1; % logarithmic colour map
 initial_width=10;                % initial frame width on complex plane
 mode='explore'; % 'explore' or 'zoom'
-computation_mode='gpu'; % 'cpu' or 'gpu'
+computation_mode='cpu'; % 'cpu' or 'gpu'
 magnifier_frac=.1;   % frame fraction occupied by magnifying rectangle
 
 figure('Position',[0 0 resolution(1) resolution(2)])
