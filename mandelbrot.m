@@ -17,19 +17,19 @@ magnifier_frac=.1;   % frame fraction occupied by magnifying rectangle
 
 figure('Position',[0 0 resolution(1) resolution(2)])
 set(gca,'position',[0 0 1 1]);
-set(gcf, 'visible', 'off');
 
 if mode==1
     magnifier_size=magnifier_frac*resolution;
     width=initial_width;
     show_frame(generate_frame())  
     
-elseif mode==2    
+elseif mode==2
+    set(gcf, 'visible', 'off');
     % zoom parameters:
     zoom_frac=10^(-15/1800); 
     n_zooms=30;
     
-    frames=zeros([resolution(2) resolution(1) 1 n_zooms]);
+    %frames=zeros([resolution(2) resolution(1) 1 n_zooms]);
     %wb_h=waitbar(0,'Creating movie...');
     writerObj = VideoWriter('movie','MPEG-4');
     writerObj.FrameRate=30;

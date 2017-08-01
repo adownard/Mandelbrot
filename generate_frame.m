@@ -13,8 +13,8 @@ function frame=generate_frame()
 %     y = gpuArray.linspace( ylim(1), ylim(2), gridSize );
 %     [xGrid,yGrid] = meshgrid( x, y );
 %     z0 = complex( xGrid, yGrid );
-    [X,Y]=meshgrid(left:(right-left)/(resolution(1)-1):right,top:-(top-bottom)/(resolution(2)-1):bottom); 
-    C=X+1i*Y;
+    [X,Y]=meshgrid(linspace(left,right,resolution(1)),linspace(top,bottom,resolution(2))); 
+    C=complex(X,Y);
 
     % initiate arrays:
     D=nan(size(C));    % depth array
