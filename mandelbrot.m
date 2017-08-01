@@ -16,8 +16,6 @@ mode=2; %1: explore, 2: zoom
 magnifier_frac=.2;   % frame fraction occupied by magnifying rectangle
 
 figure 
-colormap([0 0 0; colormap(hot(depth_levels-1))])
-set(gca,'LooseInset',get(gca,'TightInset'))
     
 if mode==1
     magnifier_size=magnifier_frac*resolution;
@@ -27,17 +25,23 @@ if mode==1
 elseif mode==2    
     % zoom parameters:
     zoom_frac=.5; 
-    n_zooms=50;
+    n_zooms=10;
     
     frames=zeros([resolution(2) resolution(1) 1 n_zooms]);
     %wb_h=waitbar(0,'Creating movie...');
+    writerObj = VideoWriter('movie','MPEG-4');
+    writerObj.FrameRate=15;
+    open(writerObj);
     for zoom_iter=1:n_zooms        
-        width=zoom_frac^(zoom_iter-1)*initial_width;    % zoom the frame-width
-        %waitbar(zoom_iter/n_zooms)    
+        width=zoom_frac^(zoom_iter-1)*initial_width;    % zoom the frame-width           
         show_frame(generate_frame())
         drawnow
+        frame = getframe(gcf);
+        %close(gcf);
+        writeVideo(writerObj,frame);
         %frames(:,:,1,zoom_iter)=frame;     
     end
+    close(writerObj);
 %     movie_name='movie'; 
 %     movie=VideoWriter(movie_name,'Uncompressed AVI');
 %     open(movie);
