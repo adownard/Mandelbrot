@@ -1,9 +1,8 @@
 function show_frame(frame)
-    global depth_levels mode rect
+    global cmap mode rect
     
     imagesc(frame);
-    colormap([0 0 0; colormap(hot(depth_levels-1))])
-    %axis image; axis([0 resolution(1) 0 resolution(2)]);
+    colormap(cmap)
     axis off;
     
     if strcmp(mode,'explore')

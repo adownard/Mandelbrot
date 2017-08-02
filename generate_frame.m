@@ -1,5 +1,4 @@
-function D=generate_frame()
-    global center width resolution depth_levels max_depth log_colour computation_mode
+function D=generate_frame(width,center,resolution,depth_levels,max_depth,log_colour,computation_mode)
     
     % get frame boundaries:    
     height=width*resolution(2)/resolution(1);
@@ -37,8 +36,7 @@ function D=generate_frame()
             % logarithmic colour map        
             D=log(D+1);
             D=D*depth_levels/max(D(:))+1;
-        end
-    
+        end        
     elseif strcmp(computation_mode,'gpu')
         x=gpuArray.linspace(left,right,resolution(1));
         y = gpuArray.linspace(top,bottom,resolution(2));
@@ -47,4 +45,5 @@ function D=generate_frame()
         D=arrayfun(@pctdemo_processMandelbrotElement,X,Y,max_depth,log_colour);
         D=gather(D); % Fetch the data back from the GPU
     end
+    D(isnan(D))=0;
     
