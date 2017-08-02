@@ -8,12 +8,12 @@ global center width resolution depth_levels max_depth log_colour mode computatio
 % overall parameters:
 resolution=[1920 1080]; % in pixels
 center=-0.840018751752609 + 0.224304941676980i;               % physical location of frame center
-depth_levels=50; % adaptive number of depth levels
+depth_levels=200; % adaptive number of depth levels
 max_depth=200; % max # of iterations
 log_colour=1; % logarithmic colour map
 initial_width=10;                % initial frame width on complex plane
 mode='explore'; % 'explore' or 'zoom'
-computation_mode='cpu'; % 'cpu' or 'gpu'
+computation_mode='gpu'; % 'cpu' or 'gpu'
 magnifier_frac=.1;   % frame fraction occupied by magnifying rectangle
 
 figure('Position',[0 0 resolution(1) resolution(2)])
