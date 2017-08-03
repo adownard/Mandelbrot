@@ -3,25 +3,28 @@ set(0,'DefaultFigureWindowStyle','normal');
 set(0,'DefaultFigureMenu','none');
 clear variables
 
-global center width resolution depth_levels max_depth cmap log_colour mode computation_mode magnifier_frac magnifier_size
+global center location width resolution depth_levels max_depth cmap log_colour mode computation_mode magrect_frac magrect_size
 
 % overall parameters:
-resolution=[1920 1080]; % in pixels
+resolution=[600 600]; % in pixels
 center=0;%-0.840018751752609 + 0.224304941676980i;               % physical location of frame center
+location=center;
 depth_levels=10; % adaptive number of depth levels
 max_depth=200; % max # of iterations
 log_colour=1; % logarithmic colour map
 initial_width=6;                % initial frame width on complex plane
 mode='explore'; % 'explore' or 'movie'
-computation_mode='gpu'; % 'cpu' or 'gpu'
-magnifier_frac=.1;   % frame fraction occupied by magnifying rectangle
+computation_mode='cpu'; % 'cpu' or 'gpu'
+magrect_frac=.1;   % frame fraction occupied by magnifying rectangle
 
-figure('Position',[0 0 resolution(1) resolution(2)])
+figure('Position',[0 0 resolution(1) resolution(2)],'Pointer','crosshair')
 set(gca,'position',[0 0 1 1]);
+%global location
+
 
 
 if strcmp(mode,'explore')
-    magnifier_size=magnifier_frac*resolution;
+    magrect_size=magrect_frac*resolution;
     width=initial_width;
     show_frame(generate_frame(width,center,resolution,depth_levels,max_depth,log_colour,computation_mode))  
     
