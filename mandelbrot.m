@@ -6,13 +6,13 @@ clear variables
 global center width resolution depth_levels max_depth cmap log_colour mode computation_mode magnifier_frac magnifier_size
 
 % overall parameters:
-resolution=[1920 1080]; % in pixels
-center=-0.840018751752609 + 0.224304941676980i;               % physical location of frame center
-depth_levels=200; % adaptive number of depth levels
+resolution=[600 600]; % in pixels
+center=0;%-0.840018751752609 + 0.224304941676980i;               % physical location of frame center
+depth_levels=10; % adaptive number of depth levels
 max_depth=200; % max # of iterations
 log_colour=1; % logarithmic colour map
-initial_width=10;                % initial frame width on complex plane
-mode='movie'; % 'explore' or 'movie'
+initial_width=6;                % initial frame width on complex plane
+mode='explore'; % 'explore' or 'movie'
 computation_mode='cpu'; % 'cpu' or 'gpu'
 magnifier_frac=.1;   % frame fraction occupied by magnifying rectangle
 
@@ -31,18 +31,21 @@ elseif strcmp(mode,'movie')
     zoom_frac=10^(-15/1800); 
     n_zooms=50;
     
-
-    %wb_h=waitbar(0,'Creating movie...');
+    frames_written=0;    
     v=VideoWriter('movie','MPEG-4');
     v.FrameRate=30;
     open(v);
+    wb_h=waitbar(0,'Creating movie...');
     tic    
     parfor zoom_iter=1:n_zooms
-        zoom_iter
-        frames(zoom_iter)=im2frame(mat2im(generate_frame(zoom_frac^(zoom_iter-1)*initial_width,center,resolution,depth_levels,max_depth,log_colour,computation_mode),cmap));     
+        %zoom_iter
+        frames(zoom_iter)=im2frame(mat2im(generate_frame(zoom_frac^(zoom_iter-1)*initial_width,center,resolution,depth_levels,max_depth,log_colour,computation_mode),cmap));
+        frames_written=frames_written+1
+        %disp(frames_written)
+        %waitbar(frames_written/n_zooms)
     end
-    writeVideo(v,frames)
-    close(v);
     toc
-    %close(wb_h)
+    writeVideo(v,frames)
+    close(v);    
+    close(wb_h)
 end

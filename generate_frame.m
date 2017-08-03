@@ -31,7 +31,8 @@ function D=generate_frame(width,center,resolution,depth_levels,max_depth,log_col
             c(I_esc)=[];
 
             depth=depth+1;
-        end        
+        end
+        
         if log_colour
             % logarithmic colour map        
             D=log(D+1);
@@ -45,5 +46,5 @@ function D=generate_frame(width,center,resolution,depth_levels,max_depth,log_col
         D=arrayfun(@pctdemo_processMandelbrotElement,X,Y,max_depth,log_colour);
         D=gather(D); % Fetch the data back from the GPU
     end
-    D(isnan(D))=0;
+    D(isnan(D))=nanmin(D(:)); % to make adaptive depth levels work
     
