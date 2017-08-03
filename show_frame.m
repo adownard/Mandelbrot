@@ -2,7 +2,7 @@ function show_frame(frame)
     global cmap mode rect
     
     imagesc(frame);
-    colormap(cmap)
+    colormap([0 0 0; colormap(hot(numel(unique(frame(:)))-1))]);
     axis off;
     
     if strcmp(mode,'explore')

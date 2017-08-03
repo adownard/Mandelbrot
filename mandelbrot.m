@@ -6,19 +6,19 @@ clear variables
 global center width resolution depth_levels max_depth cmap log_colour mode computation_mode magnifier_frac magnifier_size
 
 % overall parameters:
-resolution=[600 600]; % in pixels
+resolution=[1920 1080]; % in pixels
 center=0;%-0.840018751752609 + 0.224304941676980i;               % physical location of frame center
 depth_levels=10; % adaptive number of depth levels
 max_depth=200; % max # of iterations
 log_colour=1; % logarithmic colour map
 initial_width=6;                % initial frame width on complex plane
 mode='explore'; % 'explore' or 'movie'
-computation_mode='cpu'; % 'cpu' or 'gpu'
+computation_mode='gpu'; % 'cpu' or 'gpu'
 magnifier_frac=.1;   % frame fraction occupied by magnifying rectangle
 
 figure('Position',[0 0 resolution(1) resolution(2)])
 set(gca,'position',[0 0 1 1]);
-cmap=colormap([0 0 0; colormap(hot(depth_levels-1))]);
+
 
 if strcmp(mode,'explore')
     magnifier_size=magnifier_frac*resolution;

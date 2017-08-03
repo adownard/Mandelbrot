@@ -1,4 +1,4 @@
-function depth = pctdemo_processMandelbrotElement(x0,y0)
+function depth = pctdemo_processMandelbrotElement(x0,y0,max_depth,log_colour)
 %PCTDEMO_PROCESSMANDELBROTELEMENT  Evaluate a Mandelbrot Set element
 %   m = pctdemo_processMandelbrotElement(x0,y0,maxIterations) evaluates the
 %   number of steps before the complex value (x0,y0) jumps outside a circle
@@ -12,7 +12,6 @@ function depth = pctdemo_processMandelbrotElement(x0,y0)
 
 %   Modified by Abhranil Das and Alicia Downer, August 2017.
 
-global max_depth log_colour
 z0=complex(x0,y0);
 z=z0;
 depth=nan;
@@ -26,5 +25,5 @@ while iter<=max_depth
     iter=iter+1;
 end
 if log_colour
-    depth=log(depth);
+    depth=log(depth+1);
 end
