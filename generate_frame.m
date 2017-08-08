@@ -10,6 +10,7 @@ function D=generate_frame(width,center,resolution,depth_levels,max_depth,log_col
     if strcmp(computation_mode,'cpu')
         % generate complex grid within frame:
         [X,Y]=meshgrid(linspace(left,right,resolution(1)),linspace(top,bottom,resolution(2))); 
+        %[X,Y]=meshgrid(linspace(vpa(left),vpa(right),resolution(1)),linspace(vpa(top),vpa(bottom),resolution(2))); 
         C=complex(X,Y);
 
         % initiate arrays:

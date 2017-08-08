@@ -6,13 +6,13 @@ clear variables
 global center location width resolution depth_levels max_depth cmap log_colour mode computation_mode magrect_frac magrect_size
 
 % overall parameters:
-resolution=[600 600]; % in pixels
-center=0;%-0.840018751752609 + 0.224304941676980i;               % physical location of frame center
+resolution=[50 50]; % in pixels
+center=-0.840018751752590 + 0.224304941677271i;               % physical location of frame center
 location=center;
 depth_levels=10; % adaptive number of depth levels
 max_depth=200; % max # of iterations
 log_colour=1; % logarithmic colour map
-initial_width=6;                % initial frame width on complex plane
+initial_width=1e-15;                % initial frame width on complex plane
 mode='explore'; % 'explore' or 'movie'
 computation_mode='cpu'; % 'cpu' or 'gpu'
 magrect_frac=.1;   % frame fraction occupied by magnifying rectangle
