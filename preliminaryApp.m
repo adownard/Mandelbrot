@@ -10,14 +10,13 @@
 
 
 function myfunc
-global center location width resolution depth_levels max_depth cmap log_colour computation_mode magrect_frac magrect_size mode show_x_center show_y_center x_center y_center
+global center location width resolution depth_levels cmap log_colour computation_mode magrect_frac magrect_size mode show_x_center show_y_center x_center y_center
 
 % overall parameters:
 resolution=[1100 600]; % in pixels
 center=-0.840018751752590 + 0.224304941677271i;               % physical location of frame center
 location=center;
-depth_levels=200; % adaptive number of depth levels
-max_depth=50; % max # of iterations
+depth_levels=50; % adaptive number of depth levels
 log_colour=1; % logarithmic colour map
 cmap=colormap([0 0 0; colormap(hot(depth_levels-1))]); % colour map
 initial_width=5;                % initial frame width on complex plane
@@ -47,12 +46,28 @@ movie_mode = uicontrol(bg,...
                'Style','radiobutton','BackgroundColor','black',...
                'String','Movie','ForegroundColor','white',...
                'Position',[80 10 70 15],'FontWeight','bold');
+           
+           
+color_mode = uibuttongroup(fig,...
+                  'Title','Colours','BackgroundColor','black',...
+                  'ForegroundColor','white','FontWeight','bold',...
+                  'Position', [.15 0 .15 .15],...
+                  'SelectionChangedFcn',@set_color_mode);
+color_mode_bright = uicontrol(color_mode,...
+               'Style','radiobutton','BackgroundColor','black',...
+               'String','bright','ForegroundColor','white',...
+               'Position',[480 10 70 15]);
               
-color_mode =uicontrol(fig,... 
-                        'Style','popupmenu',...
-                        'Position',[480 10 70 15],...
-                        'String',{'Bright','Smooth'},...
-                        'Callback',@set_color_mode);              
+color_mode_smooth = uicontrol(color_mode,...
+               'Style','radiobutton','BackgroundColor','black',...
+               'String','smooth','ForegroundColor','white',...
+               'Position',[480 10 70 15],'FontWeight','bold');
+              
+% color_mode =uicontrol(fig,... 
+%                         'Style','popupmenu',...
+%                         'Position',[480 10 70 15],...
+%                         'String',{'Bright','Smooth'},...
+%                         'Callback',@set_color_mode);              
               
 show_x_center = uicontrol(fig,...
                            'Visible','on','Style','text',...
@@ -215,7 +230,7 @@ fig.Visible = 'on';
     if strcmp(mode,'explore')
          magrect_size=magrect_frac*resolution;
          width=initial_width;
-         show_frame(generate_frame(width,center,resolution,depth_levels,max_depth,log_colour,computation_mode))
+         show_frame(generate_frame(width,center,resolution,depth_levels,log_colour,computation_mode))
     end
 
 
@@ -234,7 +249,7 @@ fig.Visible = 'on';
              %%%%%% mandelbrot.m code %%%%%%%
              magrect_size=magrect_frac*resolution;
              width=initial_width;
-             show_frame(generate_frame(width,center,resolution,depth_levels,max_depth,log_colour,computation_mode))
+             show_frame(generate_frame(width,center,resolution,depth_levels,log_colour,computation_mode))
           case 'Movie'
              mode='movie'; 
              set_center_text.Visible='on';
@@ -247,7 +262,7 @@ fig.Visible = 'on';
              movie_time.Visible='on'; 
              current_center_text.Visible='off'; 
              %%%%%%% mandelbrot.m code %%%%%%
-             show_frame(generate_frame(width,center,resolution,depth_levels,max_depth,log_colour,computation_mode)) 
+             show_frame(generate_frame(width,center,resolution,depth_levels,log_colour,computation_mode)) 
       end
     end    
 
@@ -265,7 +280,7 @@ fig.Visible = 'on';
          tic    
          parfor zoom_iter=1:n_zooms
              %zoom_iter
-             frames(zoom_iter)=im2frame(mat2im(generate_frame(zoom_frac^(zoom_iter-1)*initial_width,center,resolution,depth_levels,max_depth,log_colour,computation_mode),cmap));
+             frames(zoom_iter)=im2frame(mat2im(generate_frame(zoom_frac^(zoom_iter-1)*initial_width,center,resolution,depth_levels,log_colour,computation_mode),cmap));
              frames_written=frames_written+1
          end
          toc;

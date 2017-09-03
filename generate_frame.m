@@ -1,6 +1,15 @@
-function D=generate_frame(width,center,resolution,depth_levels,max_depth,log_colour,computation_mode)
-    
-    % get frame boundaries:    
+function D=generate_frame(width,center,resolution,depth_levels,log_colour,computation_mode,min_depth)
+    % variable precision
+    if log10(width)<-11
+        if log10(width)>-33
+            mp.Digits(34) % optimized quad precision
+        else
+            mp.Digits(ceil(abs(log10(width)))+3) % truly variable precision
+        end
+        center=mp(center);
+        width=mp(width);
+    end
+    % get frame boundaries in complex plane:    
     height=width*resolution(2)/resolution(1);
     left=real(center)-width/2;
     right=real(center)+width/2;
@@ -8,9 +17,9 @@ function D=generate_frame(width,center,resolution,depth_levels,max_depth,log_col
     bottom=imag(center)-height/2;
     
     if strcmp(computation_mode,'cpu')
-        % generate complex grid within frame:
+        % generate complex grid within frame:        
         [X,Y]=meshgrid(linspace(left,right,resolution(1)),linspace(top,bottom,resolution(2))); 
-        %[X,Y]=meshgrid(linspace(vpa(left),vpa(right),resolution(1)),linspace(vpa(top),vpa(bottom),resolution(2))); 
+        %[X,Y]=meshgrid(linspace(mp(left),mp(right),resolution(1)),linspace(mp(top),mp(bottom),resolution(2))); 
         C=complex(X,Y);
 
         % initiate arrays:
@@ -21,7 +30,7 @@ function D=generate_frame(width,center,resolution,depth_levels,max_depth,log_col
 
         % evolve values:
         depth=0;
-        while (depth<max_depth)&&(isnan(nanmin(D(:)))||(depth<nanmin(D(:))+depth_levels))    
+        while (isnan(nanmin(D(:)))||(depth<nanmin(D(:))+depth_levels))    
             z=z.^2+c;           % iterate function
             I_esc=abs(z)>2;     % logically index escaped values  
             D(I(I_esc))=depth;   % set depth of escaped values
@@ -36,16 +45,15 @@ function D=generate_frame(width,center,resolution,depth_levels,max_depth,log_col
         
         if log_colour
             % logarithmic colour map        
-            D=log(D+1);
-            D=D*depth_levels/max(D(:))+1;
+            D=log(D+1);            
         end        
     elseif strcmp(computation_mode,'gpu')
         x=gpuArray.linspace(left,right,resolution(1));
         y = gpuArray.linspace(top,bottom,resolution(2));
         [X,Y] = meshgrid(x,y);
         
-        D=arrayfun(@pctdemo_processMandelbrotElement,X,Y,max_depth,log_colour);
+        D=arrayfun(@pctdemo_processMandelbrotElement,X,Y,min_depth+depth_levels,log_colour);
         D=gather(D); % Fetch the data back from the GPU
     end
-    D(isnan(D))=nanmin(D(:)); % to make adaptive depth levels work
+    D(isnan(D))=nanmin(D(:)); % to make adaptive colour levels work
     
